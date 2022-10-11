@@ -1,10 +1,29 @@
  // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract projectVotes {
-
+contract projectVotes is Ownable,AccessControl {
+    bytes32 public constant ROLE_VOLTANTE = keccak256("ROLE_VOLTANTE"); // 0x226c4972ab1f314d4ad7ff65fbbf70e5647a0620354d97bff1b978c4cf385edf
+    bytes32 public constant ROLE_ADMIN = keccak256("ROLE_ADMIN"); // 0x2172861495e7b85edac73e3cd5fbb42dd675baadf627720e687bcfdaca025096
+    
     // Variables del Votante.
     uint totalVotos = 0;
+    string public votoBueno = "Se Voto!";
+    string public votoMalo = "No Voto!";
+
+    constructor() {
+        _setupRole(DEFAULT_ADMIN_ROLE,msg.sender);
+        _setupRole(ROLE_VOLTANTE, msg.sender);
+        _setRoleAdmin(ROLE_ADMIN,ROLE_ADMIN);
+    }
+
+    function voto() public view returns(bool) {
+        //solamente los votantes puenden votar
+        //solamente un votante por voto
+        require(hasRole(ROLE_VOLTANTE, msg.sender), "Tu puedes voto");
+        return true;
+    }
 
     struct Votante{
         bool voto; // si es verdadero, la persona ya voto
@@ -39,53 +58,55 @@ contract projectVotes {
 
     Candidato public candidato3 = Candidato({
         id: 3,
-        nombre: "Ecolandian",
+        nombre: "Ecolandian2",
         contadorVotos: 0,
         addressCandidato: 0x1234567890123456789300000000000000000000
     }); 
 
    /* 
     la idea es agregar a candidatos, hay que construir una funcion. 
-
     function registroCandidatos(string memory _nombre) public {
         candidato.push(candidato(_nombre),0);
-
     }*/
-
-    address public duenoContrato;
 
     // 2. derecho al voto a los votantes por el dueño del contrato
 
-    function permisoVotar(address _votante) public returns(bool) {
-        votantes[_votante].puedeVotar = true;
+    function normalCosa() public {
+        // cosa todos puede probar
+    }
+
+    function duenoChecar() public onlyOwner {
+        // solamente para dueno
+
+    }
+    
+    function permisoVotar() public view returns(bool) {
+        require(hasRole(ROLE_VOLTANTE, msg.sender), "No Voto!");
         return true;
     }
 
- 
-    /*
-    function derechoVoto(address _votante) public {
-        
-        require(
-            msg.sender == duenoContrato,
-            "Solo el dueno del Contrato puede darte derecho al Voto."
-        );
-        require(
-            !votantes[_votante].voto,
-            "El votante ya voto."
-        );
-        require(votantes[_votante].puedeVotar == false);
-        votantes[_votante].puedeVotar = true;
-        
-        /* otra forma alternativa
-        require(
-            msg.sender == duenoContrato &&
-            !votantes[_votante].voto &&
-            votantes[_votante].puedeVotar == false
-        );
-        votantes[_votante].puedeVotar = true;
-        
+    function derechoVoto() public view returns(string memory){
+        require(hasRole(ROLE_VOLTANTE, msg.sender), "Solo las voltante puede darte derecho al Voto.");
+        return "El votante ya voto.";
     } 
-    */
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // 3. Votos de votantes == > falta solo 1 vez
@@ -95,6 +116,8 @@ contract projectVotes {
         votantes[msg.sender].voto = true;
         
         // hay que poner la funcion del tiempo 
+
+       
 
         if (_candidato == 1){
             // votas por Travelandian
@@ -120,7 +143,6 @@ contract projectVotes {
         require(!sender.voto, "Ud ya voto");
         sender.voto = true;
         sender.votos = _candidato;
-
         // If `proposal` is out of the range of the array,
         // this will throw automatically and revert all
         // changes.
@@ -129,6 +151,11 @@ contract projectVotes {
     */
 
     // 4. La votación debe terminar después de un tiempo determinado
+    function tiempoInicio() public pure returns (uint256){
+         uint256 duracion = 60; //segundos
+
+         return duracion;
+    }
 
 
 
