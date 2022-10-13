@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 //import "@openzeppelin/contracts/access/Ownable.sol"; 
 //import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/contracts/security/Pausable.sol";
+//import "@openzeppelin/contracts/contracts/security/Pausable.sol";
 
 contract projectVotos {
 
@@ -42,7 +42,6 @@ contract projectVotos {
     mapping (address => Candidato) listaCandidatos;
     address[] addressCandidato;
 
-    
 
     // 1. registro de Votantes con sus datos de identificación (nombre y address)
     function AddVotante(string memory nombre, address direccionVotante) public {
@@ -86,8 +85,11 @@ contract projectVotos {
     }
 
     // 4. La votación debe terminar después de un tiempo determinado
-
-    
+    /*
+    function tiempoinicio() public view returns (uint256 duracion){
+         uint256 tiempoinicio;
+         uint256 duracion = 60; //segundos
+    }*/
 
     // 5. Totalizar Votos y mostrar Candidato/Poryecto Ganador y la dirección del contrato inteligente.
 
